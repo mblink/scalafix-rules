@@ -2,9 +2,8 @@ package fix
 
 import scalafix.v1._
 import scala.meta._
-import scala.meta.contrib._
 
-class SubclassAccessModifier extends SemanticRule("SubclassAccessModifier") {
+class StrictSubclassAccess extends SemanticRule("StrictSubclassAccess") {
   sealed trait Access { val humanReadable: String }
   object Access {
     case object Public extends Access { val humanReadable = "public" }
@@ -78,6 +77,8 @@ class SubclassAccessModifier extends SemanticRule("SubclassAccessModifier") {
     override def message = s"Subclass access '${subAccess.humanReadable}' does not match superclass access '${superAccess.humanReadable}'"
   }
 
+  // We only look at the first overridden symbol, i.e. the direct parent of the subclass
+  // A mismatch between a superclass and a super-superclass will be attached to the superclass
   private def lintSubclassAccess(tree: Tree)(implicit doc: SemanticDocument): Patch =
     tree.symbol.info.flatMap(i => i.overriddenSymbols.headOption.flatMap(_.info.map((_, i)))) match {
       case Some((Access(superAccess), Access(subAccess))) if !Access.allowed(superAccess, subAccess) =>
@@ -87,12 +88,9 @@ class SubclassAccessModifier extends SemanticRule("SubclassAccessModifier") {
         Patch.empty
     }
 
-  // We only look at the first overridden symbol, i.e. the direct parent of the subclass
-  // A mismatch between a superclass and a super-superclass will be attached to the superclass
   override def fix(implicit doc: SemanticDocument): Patch =
     doc.tree.collect {
-      case d: Defn.Def if d.hasMod(Mod.Override()) => lintSubclassAccess(d)
-      case v: Defn.Val if v.hasMod(Mod.Override()) => lintSubclassAccess(v)
-
+      case d: Defn.Def => lintSubclassAccess(d)
+      case v: Defn.Val => lintSubclassAccess(v)
     }.asPatch
 }
