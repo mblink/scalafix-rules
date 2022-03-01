@@ -69,7 +69,6 @@ class StrictSubclassAccess extends SemanticRule("StrictSubclassAccess") {
         // Subclass vals/methods may not have different protected/private within declarations
         case (ProtectedWithin(superWithin), ProtectedWithin(subWithin)) => superWithin == subWithin
         case (PrivateWithin(superWithin), PrivateWithin(subWithin)) => superWithin == subWithin
-
       }
   }
 
