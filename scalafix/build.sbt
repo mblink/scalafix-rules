@@ -2,7 +2,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val V = _root_.scalafix.sbt.BuildInfo
 
-lazy val rulesCrossVersions = Seq(V.scala213, V.scala212, V.scala211)
+lazy val rulesCrossVersions = Seq(V.scala213, V.scala212)
 lazy val scala3Version = "3.1.1"
 
 inThisBuild(
@@ -11,20 +11,20 @@ inThisBuild(
     version := "0.1.0",
     homepage := Some(url("https://github.com/mblink/scalafix-rules")),
     licenses := Seq(License.Apache2),
-    publish / skip := true,
-    publishLocal / skip := true,
+    gitPublishDir := file("/src/maven-repo"),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
   )
 )
 
-lazy val publishSettings = Seq(
-  publish / skip := false,
-  publishLocal / skip := false,
-  gitPublishDir := file("/src/maven-repo"),
+lazy val noPublishSettings = Seq(
+  publish / skip := true,
+  publishLocal / skip := true,
+  gitRelease := {},
 )
 
 lazy val bondlinkScalafix = project.in(file("."))
+  .settings(noPublishSettings)
   .aggregate(
     rules.projectRefs ++
       input.projectRefs ++
@@ -33,7 +33,6 @@ lazy val bondlinkScalafix = project.in(file("."))
   )
 
 lazy val rules = projectMatrix
-  .settings(publishSettings)
   .settings(
     moduleName := "scalafix-rules",
     libraryDependencies += "ch.epfl.scala" %% "scalafix-core" % V.scalafixVersion,
@@ -43,17 +42,21 @@ lazy val rules = projectMatrix
   .jvmPlatform(rulesCrossVersions)
 
 lazy val input = projectMatrix
+  .settings(noPublishSettings)
   .defaultAxes(VirtualAxis.jvm)
   .jvmPlatform(scalaVersions = rulesCrossVersions :+ scala3Version)
 
 lazy val output = projectMatrix
+  .settings(noPublishSettings)
   .defaultAxes(VirtualAxis.jvm)
   .jvmPlatform(scalaVersions = rulesCrossVersions :+ scala3Version)
 
 lazy val testsAggregate = Project("tests", file("target/testsAggregate"))
+  .settings(noPublishSettings)
   .aggregate(tests.projectRefs: _*)
 
 lazy val tests = projectMatrix
+  .settings(noPublishSettings)
   .settings(
     libraryDependencies += "ch.epfl.scala" % "scalafix-testkit" % V.scalafixVersion % Test cross CrossVersion.full,
     scalafixTestkitOutputSourceDirectories :=
@@ -87,11 +90,6 @@ lazy val tests = projectMatrix
   .customRow(
     scalaVersions = Seq(V.scala212),
     axisValues = Seq(TargetAxis(V.scala212), VirtualAxis.jvm),
-    settings = Seq()
-  )
-  .customRow(
-    scalaVersions = Seq(V.scala211),
-    axisValues = Seq(TargetAxis(V.scala211), VirtualAxis.jvm),
     settings = Seq()
   )
   .dependsOn(rules)
