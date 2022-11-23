@@ -3,12 +3,12 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 lazy val V = _root_.scalafix.sbt.BuildInfo
 
 lazy val rulesCrossVersions = Seq(V.scala213, V.scala212)
-lazy val scala3Version = "3.1.1"
+lazy val scala3Version = "3.2.1"
 
 inThisBuild(
   List(
     organization := "bondlink",
-    version := "0.1.0",
+    version := "0.2.0",
     homepage := Some(url("https://github.com/mblink/scalafix-rules")),
     licenses := Seq(License.Apache2),
     gitPublishDir := file("/src/maven-repo"),
