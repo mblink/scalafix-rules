@@ -2,6 +2,23 @@
 
 ## Rules
 
+### `NoUnnecessaryCase`
+
+This rule enforces that the `case` keyword is not used unnecessarily in functions.
+For example, the following code compiles:
+
+```scala
+Some(1).map { case i => i }
+```
+
+but the `case` keyword adds runtime overhead. This rule will warn that `case` is unnecessary:
+
+```scala
+Some(1).map { case i => i }/*
+              ^^^^^^^^^^^
+The `case` keyword is unnecessary here */
+```
+
 ### `StrictSubclassAccess`
 
 This rule enforces that overridden `def`s and `val`s don't have stronger access privileges than their superclass, i.e.
