@@ -53,6 +53,11 @@ for the full list of super/subclass access combinations that are allowed by the 
 
 ## Development
 
+### ServiceLoader configuration
+
+Each rule must be included in the ServiceLoader configuration file in order to be loaded. This
+file is located in the `rules/src/main/resources/META-INF/services` directory.
+
 ### Compiling
 
 Clone the repository, `cd` into the `scalafix` directory, and start SBT:
