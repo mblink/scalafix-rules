@@ -54,7 +54,6 @@ class NoWithForExtends extends SyntacticRule("NoWithForExtends") {
   }
 
   override def fix(implicit doc: SyntacticDocument): Patch = {
-    println(traverseTree(doc.tree).flatMap(_.toList).map(tok => tok.text)): Unit
     traverseTree(doc.tree)
       .map(_.toList)
       .map(cleanPairedTokens[LeftParen, RightParen])
