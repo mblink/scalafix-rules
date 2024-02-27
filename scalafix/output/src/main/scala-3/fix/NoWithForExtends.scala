@@ -22,4 +22,16 @@ object NoWithForExtends {
   case class ChildE(a: Int) extends SuperWithParamA(a) with SuperB {}
 
   case class ChildF(a: Int) extends SuperWithParamA(a), SuperB {}
+
+  trait Outer {
+    trait ChildG extends SuperA with SuperB {}
+
+    trait ChildH extends SuperA, SuperB {}
+  }
+
+  trait WithParam[A] {}
+
+  trait WithParamChildA extends WithParam[SuperA with SuperB] with SuperC {}
+
+  trait WithParamChildB extends WithParam[SuperA with SuperB], SuperC {}
 }

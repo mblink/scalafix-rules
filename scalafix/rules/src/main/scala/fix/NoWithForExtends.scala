@@ -31,7 +31,6 @@ class NoWithForExtends extends SyntacticRule("NoWithForExtends") {
   private def containsSublist(list: List[Token]): Option[Token] = list match {
     case Nil => None
     case (_: KwExtends) :: _ :: _ :: _ :: (wth: KwWith) :: _ => Some(wth)
-    case (_: KwExtends) :: _ :: _ :: _ :: _ :: (wth: KwWith) :: _ => Some(wth)
     case _  :: tail => containsSublist(tail)
   }
 
