@@ -36,13 +36,22 @@ class NoWithForExtends extends SyntacticRule("NoWithForExtends") {
   }
 
   private def traverseTree(tree: Tree): List[Tokens] = {
-    val toks = tree.children.collect {
-      case t: Template if t.inits.length > 1 => t.tokens
+    @annotation.tailrec
+    def recTreeAcc(tlist: List[Tree], acc: List[Tokens]): List[Tokens] = {
+      tlist match {
+        case Nil => acc
+        case head :: tail =>
+          val toks = head.children.collect {
+            case t: Template if t.inits.length > 1 => t.tokens
+          }
+          head.children match {
+            case Nil => recTreeAcc(tail, acc ++ toks)
+            case _ => recTreeAcc(head.children ++ tail, acc ++ toks)
+          }
+      }
     }
-    tree.children.length match {
-      case  0 => toks
-      case _ => toks ++ tree.children.flatMap(c => traverseTree(c))
-    }
+
+    recTreeAcc(tree.children, List())
   }
 
   override def fix(implicit doc: SyntacticDocument): Patch = {
