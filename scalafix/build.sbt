@@ -8,7 +8,7 @@ lazy val scala3Version = "3.3.1"
 inThisBuild(
   List(
     organization := "bondlink",
-    version := "0.4.0",
+    version := "0.5.0",
     homepage := Some(url("https://github.com/mblink/scalafix-rules")),
     licenses := Seq(License.Apache2),
     gitPublishDir := file("/src/maven-repo"),
