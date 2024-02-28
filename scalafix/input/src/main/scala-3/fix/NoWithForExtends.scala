@@ -28,20 +28,30 @@ object NoWithForExtends {
     val init = a
   }
 
-  case class ChildE(a: Int) extends SuperWithParamA(a) with SuperB {}/* assert: NoWithForExtends
-                                                       ^^^^
+  case class ChildE(a: Int) extends SuperWithParamA(a)
+    // with comment
+    with SuperB {}/* assert: NoWithForExtends
+    ^^^^
      The `with` keyword is unnecessary here, replace with a comma
      */
 
-  case class ChildF(a: Int) extends SuperWithParamA(a), SuperB {}
+  case class ChildF(a: Int) extends SuperWithParamA(a),
+  // with comment
+  SuperB {}
 
-  trait Outer {
+  object Outer {
     trait ChildG extends SuperA with SuperB {}/* assert: NoWithForExtends
                                 ^^^^
   The `with` keyword is unnecessary here, replace with a comma
   */
 
     trait ChildH extends SuperA, SuperB {}
+
+    object Inner {
+      trait Core {}
+    }
+
+    trait Mantle
   }
 
   trait WithParam[A] {}
@@ -52,4 +62,11 @@ object NoWithForExtends {
    */
 
   trait WithParamChildB extends WithParam[SuperA with SuperB], SuperC {}
+
+  trait DotAccessWith extends Outer.Inner.Core with Outer.Mantle {}/* assert: NoWithForExtends
+                                               ^^^^
+  The `with` keyword is unnecessary here, replace with a comma
+  */
+
+  trait DotAccessComma extends Outer.Inner.Core, Outer.Mantle {}
 }
