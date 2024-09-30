@@ -57,6 +57,7 @@ extends SyntacticRule("NoUnnecessaryForComprehension") {
 
   override def fix(implicit doc: SyntacticDocument): Patch =
     doc.tree.collect {
-      case t @ Term.ForYield(List(_), _) => Patch.lint(UnnecessaryForComprehensionLint(t.pos, config.color))
+      case t @ Term.ForYield.After_4_9_9(Term.EnumeratorsBlock(List(_)), _) =>
+        Patch.lint(UnnecessaryForComprehensionLint(t.pos, config.color))
     }.asPatch
 }
