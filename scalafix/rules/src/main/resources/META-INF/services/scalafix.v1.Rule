@@ -1,3 +1,4 @@
+fix.GivenUsing
 fix.NoUnnecessaryCase
 fix.NoUnnecessaryForComprehension
 fix.StrictSubclassAccess
