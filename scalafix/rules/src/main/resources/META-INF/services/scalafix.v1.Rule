@@ -1,5 +1,6 @@
 fix.GivenUsing
 fix.NoUnnecessaryCase
 fix.NoUnnecessaryForComprehension
+fix.NoUnnecessaryPure
 fix.StrictSubclassAccess
 fix.NoWithForExtends
