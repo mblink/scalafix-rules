@@ -48,7 +48,7 @@ object Sub extends Super {
 }
 ```
 
-See `def allowed` in [`scalafix/rules/.../StrictSubclassAccess.scala`](https://github.com/mblink/scalafix-rules/blob/main/scalafix/rules/src/main/scala/fix/StrictSubclassAccess.scala#L35-L72)
+See `def allowed` in [`rules/.../StrictSubclassAccess.scala`](https://github.com/mblink/scalafix-rules/blob/main/rules/src/main/scala/fix/StrictSubclassAccess.scala#L35-L72)
 for the full list of super/subclass access combinations that are allowed by the rule.
 
 ## Development
@@ -64,7 +64,7 @@ Clone the repository, `cd` into the `scalafix` directory, and start SBT:
 
 ```bash
 git clone git@github.com:mblink/scalafix-rules.git
-cd scalafix-rules/scalafix
+cd scalafix-rules
 sbt
 ```
 
@@ -78,8 +78,8 @@ with `tests/test`.
 Each test must have two files:
 
 ```
-scalafix/input/src/main/scala/fix/TestName.scala
-scalafix/output/src/main/scala/fix/TestName.scala
+input/src/main/scala/fix/TestName.scala
+output/src/main/scala/fix/TestName.scala
 ```
 
 The file in the `input` directory should list the scalafix rule to be tested in a comment at the top, and can contain
@@ -97,7 +97,7 @@ For an example of a lint-only rule, imagine one named `ExampleLintRule` that add
 equal to the literal string `"example"`. The `input` and `output` files for its test might look like this:
 
 ```scala
-// scalafix/input/src/main/scala/fix/ExampleLintRule.scala
+// input/src/main/scala/fix/ExampleLintRule.scala
 /*
 rule = ExampleLintRule
 */
@@ -109,7 +109,7 @@ object ExampleLintRule {
   Don't use the literal string "example" */
 }
 
-// scalafix/output/src/main/scala/fix/ExampleLintRule.scala
+// output/src/main/scala/fix/ExampleLintRule.scala
 package fix
 
 object ExampleLintRule {
@@ -121,7 +121,7 @@ For an example of a rewrite rule, imagine one named `ExampleRewriteRule` that ch
 `"foobar"`. The `input` and `output` files for its test might look like this:
 
 ```scala
-// scalafix/input/src/main/scala/fix/ExampleRewriteRule.scala
+// input/src/main/scala/fix/ExampleRewriteRule.scala
 /*
 rule = ExampleRewriteRule
 */
@@ -131,7 +131,7 @@ object ExampleRewriteRule {
   val example = "example"
 }
 
-// scalafix/output/src/main/scala/fix/ExampleRewriteRule.scala
+// output/src/main/scala/fix/ExampleRewriteRule.scala
 package fix
 
 object ExampleRewriteRule {

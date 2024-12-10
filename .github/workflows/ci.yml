@@ -25,4 +25,3 @@ jobs:
 
       - name: sbt test
         run: sbt test
-        working-directory: ./scalafix
