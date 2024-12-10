@@ -14,7 +14,10 @@ jobs:
       matrix:
         java: [8, 11, 17, 21]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Java ${{ matrix.java }}
         uses: actions/setup-java@v4
