@@ -11,7 +11,7 @@ inThisBuild(
     version := "0.13.0",
     homepage := Some(url("https://github.com/mblink/scalafix-rules")),
     licenses := Seq(License.Apache2),
-    gitPublishDir := file("/src/maven-repo"),
+    publishTo := Some("GitHub Package Registry".at("https://maven.pkg.github.com/mblink/scalafix-rules")),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
   )
@@ -20,7 +20,6 @@ inThisBuild(
 lazy val noPublishSettings = Seq(
   publish / skip := true,
   publishLocal / skip := true,
-  gitRelease := {},
 )
 
 lazy val bondlinkScalafix = project.in(file("."))
