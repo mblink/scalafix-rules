@@ -11,7 +11,7 @@ inThisBuild(
     version := "0.13.0",
     homepage := Some(url("https://github.com/mblink/scalafix-rules")),
     licenses := Seq(License.Apache2),
-    publishTo := Some("GitHub Package Registry".at("https://maven.pkg.github.com/mblink/scalafix-rules")),
+    publishTo := Some("BondLink S3".at("s3://bondlink-maven-repo")),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
   )
