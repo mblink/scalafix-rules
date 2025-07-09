@@ -1,6 +1,7 @@
 fix.GivenUsing
+fix.MapGetOrElse
 fix.NoUnnecessaryCase
 fix.NoUnnecessaryForComprehension
 fix.NoUnnecessaryPure
-fix.StrictSubclassAccess
 fix.NoWithForExtends
+fix.StrictSubclassAccess
