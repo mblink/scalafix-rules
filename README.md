@@ -1,23 +1,95 @@
 # BondLink scalafix rules
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Rules](#rules)
+  - [`GivenUsing` (specific to Scala 3)](#givenusing-specific-to-scala-3)
+  - [`MapGetOrElse`](#mapgetorelse)
+  - [`NoUnnecessaryCase` (specific to Scala 3)](#nounnecessarycase-specific-to-scala-3)
+  - [`NoUnnecessaryForComprehension`](#nounnecessaryforcomprehension)
+  - [`NoUnnecessaryPure` (specific to Scala 3)](#nounnecessarypure-specific-to-scala-3)
+  - [`NoWithForExtends` (specific to Scala 3)](#nowithforextends-specific-to-scala-3)
+  - [`StrictSubclassAccess`](#strictsubclassaccess)
+- [Development](#development)
+  - [ServiceLoader configuration](#serviceloader-configuration)
+  - [Compiling](#compiling)
+  - [Testing](#testing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Rules
 
-### `NoUnnecessaryCase`
+### `GivenUsing` (specific to Scala 3)
+
+This rule enforces that the `given` and `using` keywords are used in place of the `implicit` keyword.
+
+See the [test input file](input/src/main/scala-3/fix/GivenUsing.scala) for examples of what's reported.
+
+### `MapGetOrElse`
+
+This rule enforces the use of `fold` instead of `map...getOrElse`. This applies to any types for which `map...getOrElse`
+can be used, e.g. `Option` and `Either`.
+
+See the [test input file](input/src/main/scala/fix/MapGetOrElse.scala) for examples of what's reported.
+
+### `NoUnnecessaryCase` (specific to Scala 3)
 
 This rule enforces that the `case` keyword is not used unnecessarily in functions.
 For example, the following code compiles:
 
 ```scala
-Some(1).map { case i => i }
+Some((1, 2)).map { case (i, j) => i + j }
 ```
 
-but the `case` keyword adds runtime overhead. This rule will warn that `case` is unnecessary:
+but the `case` keyword adds runtime overhead and is no longer necessary in Scala 3. This rule will warn that `case` is unnecessary:
 
 ```scala
-Some(1).map { case i => i }/*
-              ^^^^^^^^^^^
+Some((1, 2)).map { case (i + j => i + j }/*
+                   ^^^^^^^^^^^^^^^^^^^^
 The `case` keyword is unnecessary here */
 ```
+
+Instead you can write:
+
+```scala
+Some((1, 2)).map((i, j) => i + j)
+```
+
+See the [test input file](input/src/main/scala-3/fix/NoUnnecessaryCase.scala) for examples of what's reported.
+
+### `NoUnnecessaryForComprehension`
+
+This rule enforces that you don't use for comprehensions when the for comprehension contains a single statement.
+
+See the [test input file](input/src/main/scala/fix/NoUnnecessaryForComprehension.scala) for examples of what's reported.
+
+### `NoUnnecessaryPure` (specific to Scala 3)
+
+This rule enforces that you don't use `x <- foo.pure[...]` on the first line of a for comprehension.
+Instead you can just write `x = foo`.
+
+This assumes that you're compiling your Scala 3 code with
+[for comprehension improvements](https://docs.scala-lang.org/sips/better-fors.html) enabled.
+In Scala 3.6, you can enable this with the `-language:experimental.betterFors` compiler flag.
+In Scala 3.7, you can enable it with the `-preview` compiler flag.
+
+See the [test input file](input/src/main/scala-3/fix/NoUnnecessaryPure.scala) for examples of what's reported.
+
+### `NoWithForExtends` (specific to Scala 3)
+
+This rule enforces that you use commas when extending multiple classes/traits instead of the `with` keyword. For example:
+
+```scala
+trait Foo
+trait Bar
+
+object Baz extends Foo with Bar/*
+                       ^^^^
+The `with` keyword is unnecessary here, replace with a comma */
+```
+
+See the [test input file](input/src/main/scala-3/fix/NoWithForExtends.scala) for examples of what's reported.
 
 ### `StrictSubclassAccess`
 
