@@ -1,3 +1,4 @@
+fix.DisableConstructor
 fix.GivenUsing
 fix.MapGetOrElse
 fix.NoUnnecessaryCase

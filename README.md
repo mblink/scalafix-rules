@@ -4,6 +4,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Rules](#rules)
+  - [`DisableConstructor`](#disableconstructor)
   - [`GivenUsing` (specific to Scala 3)](#givenusing-specific-to-scala-3)
   - [`MapGetOrElse`](#mapgetorelse)
   - [`NoUnnecessaryCase` (specific to Scala 3)](#nounnecessarycase-specific-to-scala-3)
@@ -19,6 +20,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Rules
+
+### `DisableConstructor`
+
+This rule allows you to disable certain class constructors using regex patterns. It's similar to the `Disable` rule from
+Scaluzzi.
+
+See [the test input](input/src/main/scala/fix/DisableConstructor.scala) for example configuration.
 
 ### `GivenUsing` (specific to Scala 3)
 
