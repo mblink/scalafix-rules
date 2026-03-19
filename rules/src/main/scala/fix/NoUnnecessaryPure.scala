@@ -20,7 +20,7 @@ case class UnnecessaryPureLint(position: Position, color: Boolean) extends Diagn
   private val red = withColor(AnsiColor.RED)
 
   override def message = s"""|
-    |The first statement of a ${magenta("for")} comprehension no longer needs to use `<-` along with `.pure`, it can use `=`
+    |Statements in a ${magenta("for")} comprehension do not need to use `<-` along with `.pure`, they can use `=`
     |
     |Before:
     |
@@ -57,7 +57,7 @@ extends SyntacticRule("NoUnnecessaryPure") {
 
   override def fix(implicit doc: SyntacticDocument): Patch =
     doc.tree.collect {
-      case Term.ForYield.After_4_9_9(Term.EnumeratorsBlock(PureGenerator(t) :: _), _) =>
-        Patch.lint(UnnecessaryPureLint(t.pos, config.color))
+      case Term.ForYield.After_4_9_9(Term.EnumeratorsBlock(enums), _) =>
+        enums.collect { case PureGenerator(t) => Patch.lint(UnnecessaryPureLint(t.pos, config.color)) }.asPatch
     }.asPatch
 }

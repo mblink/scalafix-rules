@@ -13,7 +13,7 @@ object NoUnnecessaryPure {
     i <- 1.pure[Option]/* assert: NoUnnecessaryPure
          ^^^^^^^^^^^^^^
 
-The first statement of a for comprehension no longer needs to use `<-` along with `.pure`, it can use `=`
+Statements in a for comprehension do not need to use `<-` along with `.pure`, they can use `=`
 
 Before:
 
@@ -29,5 +29,23 @@ After:
     ...
   } yield result */
     j = 2
-  } yield i + j
+    k <- 3.pure[Option]/* assert: NoUnnecessaryPure
+         ^^^^^^^^^^^^^^
+
+Statements in a for comprehension do not need to use `<-` along with `.pure`, they can use `=`
+
+Before:
+
+  for {
+    x <- someStatementHere.pure[SomeType]
+    ...
+  } yield result
+
+After:
+
+  for {
+    x = someStatementHere
+    ...
+  } yield result */
+  } yield i + j + k
 }
