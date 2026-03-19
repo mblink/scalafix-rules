@@ -8,5 +8,6 @@ object NoUnnecessaryPure {
   val x = for {
     i <- 1.pure[Option]
     j = 2
-  } yield i + j
+    k <- 3.pure[Option]
+  } yield i + j + k
 }
