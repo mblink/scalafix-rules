@@ -28,7 +28,7 @@ lazy val bondlinkScalafix = project.in(file("."))
     rules.projectRefs ++
       input.projectRefs ++
       output.projectRefs ++
-      tests.projectRefs: _*
+      tests.projectRefs*
   )
 
 lazy val rules = projectMatrix
@@ -52,7 +52,7 @@ lazy val output = projectMatrix
 
 lazy val testsAggregate = Project("tests", file("target/testsAggregate"))
   .settings(noPublishSettings)
-  .aggregate(tests.projectRefs: _*)
+  .aggregate(tests.projectRefs*)
 
 lazy val tests = projectMatrix
   .settings(noPublishSettings)
@@ -74,7 +74,7 @@ lazy val tests = projectMatrix
       TargetAxis.resolve(input, Compile / scalaVersion).value
   )
   .defaultAxes(
-    rulesCrossVersions.map(VirtualAxis.scalaABIVersion) :+ VirtualAxis.jvm: _*
+    rulesCrossVersions.map(VirtualAxis.scalaABIVersion) :+ VirtualAxis.jvm*
   )
   .customRow(
     scalaVersions = Seq(V.scala212),
