@@ -1,3 +1,4 @@
+fix.Disable
 fix.DisableConstructor
 fix.GivenUsing
 fix.MapGetOrElse
