@@ -5,6 +5,7 @@
 
 - [Rules](#rules)
   - [`DisableConstructor`](#disableconstructor)
+  - [`DisableInStaticInit`](#disableinstaticinit)
   - [`GivenUsing` (specific to Scala 3)](#givenusing-specific-to-scala-3)
   - [`MapGetOrElse`](#mapgetorelse)
   - [`NoUnnecessaryCase` (specific to Scala 3)](#nounnecessarycase-specific-to-scala-3)
@@ -27,6 +28,23 @@ This rule allows you to disable certain class constructors using regex patterns.
 Scaluzzi.
 
 See [the test input](input/src/main/scala/fix/DisableConstructor.scala) for example configuration.
+
+### `DisableInStaticInit`
+
+This rule disables references to certain symbols, matched by regex patterns, where they're evaluated while an `object`
+or top-level definition is initialized: the right-hand side of a `val`, `lazy val`, or parameterless `given`, or a
+statement in an `object` body. The value is computed once and kept for the life of the JVM, so it's meant for symbols
+whose result should change between calls, such as reading the current time.
+
+References inside a `def`, a class or trait body, a lambda, a partial function, a `given` with parameters, or a `val`
+typed as a context function aren't reported, since those are evaluated on each use. By-name arguments aren't detected.
+
+`DisableInStaticInit.implicits` takes the same kind of patterns and reports a call in the same positions when one of
+the matching symbols is passed to it implicitly, e.g. a `given` clock that every time-dependent method takes as a
+`using` parameter. This relies on the implicit arguments that SemanticDB records as synthetics.
+
+See the test inputs for example configuration: [symbols](input/src/main/scala/fix/DisableInStaticInit.scala) and
+[implicits](input/src/main/scala-3/fix/DisableInStaticInitImplicits.scala).
 
 ### `GivenUsing` (specific to Scala 3)
 

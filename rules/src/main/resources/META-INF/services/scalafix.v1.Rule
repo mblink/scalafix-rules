@@ -1,5 +1,6 @@
 fix.Disable
 fix.DisableConstructor
+fix.DisableInStaticInit
 fix.GivenUsing
 fix.MapGetOrElse
 fix.NoUnnecessaryCase
