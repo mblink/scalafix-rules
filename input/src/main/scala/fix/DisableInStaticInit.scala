@@ -45,7 +45,6 @@ object DisableInStaticInit {
   val h = () => now()
   val i: Int => Long = _ => today
   val j: PartialFunction[Int, Long] = { case _ => now() }
-  val k = List(1).map(_ + today)
 
   class C {
     val l = now()

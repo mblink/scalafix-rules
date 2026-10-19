@@ -37,7 +37,9 @@ statement in an `object` body. The value is computed once and kept for the life 
 whose result should change between calls, such as reading the current time.
 
 References inside a `def`, a class or trait body, a lambda, a partial function, a `given` with parameters, or a `val`
-typed as a context function aren't reported, since those are evaluated on each use. By-name arguments aren't detected.
+typed as a context function aren't reported, since those are evaluated on each use. This is syntactic: a lambda or
+by-name argument that's run during initialization, such as `List(1).map(_ => now())` or `opt.getOrElse(now())`, isn't
+reported, and a by-name argument that's kept for later, such as `Eval.always(now())`, is.
 
 `DisableInStaticInit.implicits` takes the same kind of patterns and reports a call in the same positions when one of
 the matching symbols is passed to it implicitly, e.g. a `given` clock that every time-dependent method takes as a
