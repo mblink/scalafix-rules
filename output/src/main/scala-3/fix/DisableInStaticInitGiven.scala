@@ -10,10 +10,15 @@ object DisableInStaticInitGiven {
   given stampFrom(using s: String): Stamp = Stamp(now() + s.length)
 
   val ctx: String ?=> Long = now()
+  val autoEta: () => Long = now
 
   enum E {
     case A
     def stamp: Long = now()
+  }
+
+  enum Phase(val at: Long) {
+    case Boot extends Phase(now())
   }
 }
 

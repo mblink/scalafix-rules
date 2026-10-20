@@ -36,18 +36,25 @@ or top-level definition is initialized: the right-hand side of a `val`, `lazy va
 statement in an `object` body. The value is computed once and kept for the life of the JVM, so it's meant for symbols
 whose result should change between calls, such as reading the current time.
 
-References inside a `def`, a class or trait body, a lambda, a partial function, a `given` with parameters, or a `val`
-typed as a context function aren't reported, since those are evaluated on each use. This is syntactic: a lambda or
-by-name argument that's run during initialization, such as `List(1).map(_ => now())` or `opt.getOrElse(now())`, isn't
-reported, and a by-name or context-function argument that's kept for later, such as `Eval.always(now())` or
-`withSession(query(now()))` where `withSession` takes a `Session ?=> A`, is.
+References inside a `def`, a class or trait body, a lambda, a partial function, an eta-expansion (`now _`), a `given`
+with parameters, or a `val` typed as a context function aren't reported, since those are evaluated on each use. The
+arguments of an `enum` case (`case Boot extends Phase(now())`) are reported, since each case is built once. A
+definition's own name and the qualifier of a selection (`Clock` in `Clock.tick()`) aren't matched, and the message
+names the matched symbol.
+
+The check is syntactic. A lambda run during initialization, such as `List(1).map(_ => now())`, isn't reported. A
+by-name or context-function argument is reported whether the callee runs it right away, as `opt.getOrElse(now())`
+does, or keeps it for later, as `Eval.always(now())` or `withSession(query(now()))` (where `withSession` takes a
+`Session ?=> A`) do. Scala 3's automatic eta-expansion (`val f: () => Long = now`) is reported.
 
 `DisableInStaticInit.implicits` takes the same kind of patterns and reports a call in the same positions when one of
 the matching symbols is passed to it implicitly, e.g. a `given` clock that every time-dependent method takes as a
-`using` parameter. This relies on the implicit arguments that SemanticDB records as synthetics.
+`using` parameter. This relies on the implicit arguments that SemanticDB records as synthetics, which Scala 3 always
+does and Scala 2 only with `-P:semanticdb:synthetics:on`.
 
 See the test inputs for example configuration: [symbols](input/src/main/scala/fix/DisableInStaticInit.scala) and
-[implicits](input/src/main/scala-3/fix/DisableInStaticInitImplicits.scala).
+implicits for [Scala 3](input/src/main/scala-3/fix/DisableInStaticInitImplicits.scala) and
+[Scala 2](input/src/main/scala/fix/DisableInStaticInitImplicits2.scala).
 
 ### `GivenUsing` (specific to Scala 3)
 

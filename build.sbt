@@ -42,6 +42,9 @@ lazy val rules = projectMatrix
 
 lazy val input = projectMatrix
   .settings(noPublishSettings)
+  .settings(
+    scalacOptions ++= (if (scalaBinaryVersion.value == "3") Nil else Seq("-P:semanticdb:synthetics:on")),
+  )
   .defaultAxes(VirtualAxis.jvm)
   .jvmPlatform(scalaVersions = rulesCrossVersions :+ scala3Version)
 
