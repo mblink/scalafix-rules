@@ -7,6 +7,7 @@
   - [`DisableConstructor`](#disableconstructor)
   - [`DisableInStaticInit`](#disableinstaticinit)
   - [`GivenUsing` (specific to Scala 3)](#givenusing-specific-to-scala-3)
+  - [`LinearSizeCompare`](#linearsizecompare)
   - [`MapGetOrElse`](#mapgetorelse)
   - [`NoUnnecessaryCase` (specific to Scala 3)](#nounnecessarycase-specific-to-scala-3)
   - [`NoUnnecessaryForComprehension`](#nounnecessaryforcomprehension)
@@ -61,6 +62,27 @@ implicits for [Scala 3](input/src/main/scala-3/fix/DisableInStaticInitImplicits.
 This rule enforces that the `given` and `using` keywords are used in place of the `implicit` keyword.
 
 See the [test input file](input/src/main/scala-3/fix/GivenUsing.scala) for examples of what's reported.
+
+### `LinearSizeCompare`
+
+This semantic lint reports comparisons that compute a Scala collection's `size` or `length` to check whether it's
+empty. For example, `list.length == 0` can use `list.isEmpty`, and `0 < iterator.size` can use `iterator.nonEmpty`.
+It also recognizes the equivalent comparisons with `1`, such as `size < 1` and `size >= 1`, and Cats `===` and `=!=`.
+On an iterator, computing the size can consume elements. The suggested checks use `hasNext` and leave elements
+available for iteration. The rule emits diagnostics without rewriting code.
+
+The rule uses the resolved method and the receiver's static type to identify linear size or length implementations.
+It covers collections such as `List`, `LinearSeq`, immutable `Queue`, `LazyList`, `Stream`, `Iterator`, and `View`,
+while excluding constant-time cases such as `Vector`, `ArraySeq`, arrays, and hash maps and sets. A generic `Seq`
+or `Iterable` may have a linear size, so the rule reports those static types by default. To report only known linear
+cases, set `LinearSizeCompare.reportGenericSeq = false`.
+
+The rule reads the receiver's type from the SemanticDB signature of a named value or a called method's declared result
+type. It uses static types, so it cannot determine the runtime collection behind a generic type, and it doesn't infer
+the types of other expressions, such as an indexed element (`lists(0)`) or a method returning a type parameter. When
+a shared method requires a receiver type and the rule cannot recover that type, it skips the comparison.
+
+See the [test input file](input/src/main/scala/fix/LinearSizeCompare.scala) for examples.
 
 ### `MapGetOrElse`
 

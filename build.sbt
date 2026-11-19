@@ -40,8 +40,12 @@ lazy val rules = projectMatrix
   .defaultAxes(VirtualAxis.jvm)
   .jvmPlatform(rulesCrossVersions)
 
+lazy val fixtureSettings = Seq(
+  libraryDependencies += "org.typelevel" %% "cats-core" % "2.13.0",
+)
+
 lazy val input = projectMatrix
-  .settings(noPublishSettings)
+  .settings(noPublishSettings, fixtureSettings)
   .settings(
     scalacOptions ++= (if (scalaBinaryVersion.value == "3") Nil else Seq("-P:semanticdb:synthetics:on")),
   )
@@ -49,7 +53,7 @@ lazy val input = projectMatrix
   .jvmPlatform(scalaVersions = rulesCrossVersions :+ scala3Version)
 
 lazy val output = projectMatrix
-  .settings(noPublishSettings)
+  .settings(noPublishSettings, fixtureSettings)
   .defaultAxes(VirtualAxis.jvm)
   .jvmPlatform(scalaVersions = rulesCrossVersions :+ scala3Version)
 

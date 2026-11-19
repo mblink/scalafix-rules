@@ -2,6 +2,7 @@ fix.Disable
 fix.DisableConstructor
 fix.DisableInStaticInit
 fix.GivenUsing
+fix.LinearSizeCompare
 fix.MapGetOrElse
 fix.NoUnnecessaryCase
 fix.NoUnnecessaryForComprehension
